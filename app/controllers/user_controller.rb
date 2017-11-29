@@ -1,5 +1,8 @@
 class UserController < ApplicationController
   def all
+    logger.info { 'broadcasting...' }
+    redis = Redis.new(host: '127.0.0.1', port: 6379, db: 15)
+    redis.publish('user-created', 'test')
     render json: User.all
   end
 
@@ -14,11 +17,6 @@ class UserController < ApplicationController
     # user.title = params[:title]
     # user.age = params[:age].to_i
     # user.save!
-
-    logger.info { 'broadcasting...' }
-    redis = Redis.new(host: '127.0.0.1', port: 6379, db: 15)
-    redis.publish('user-created', 'test')
-
     render json: { status: 'ok' }
   end
 end
